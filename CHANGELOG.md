@@ -1,5 +1,11 @@
 # @better-giving/paypal-sdk
 
+## 2.0.0
+
+### Major Changes
+
+- a483a5c: with client
+
 ## 1.1.1
 
 ### Patch Changes
