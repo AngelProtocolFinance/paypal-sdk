@@ -1,0 +1,11 @@
+# @better-giving/paypal-sdk
+
+## 1.1.0
+
+### Minor Changes
+
+- b19ce0a: Initial setup with Changesets for automated versioning and publishing
+
+### Patch Changes
+
+- 39bee71: test workflow
