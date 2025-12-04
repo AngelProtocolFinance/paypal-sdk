@@ -1,0 +1,23 @@
+# Source files
+generated/
+specs/
+scripts/
+examples/
+
+# Config files
+tsconfig.json
+openapitools.json
+.gitignore
+
+# Development
+node_modules/
+*.log
+.DS_Store
+
+# Only publish dist/
+*
+!dist/
+!dist/**/*
+!package.json
+!README.md
+!LICENSE

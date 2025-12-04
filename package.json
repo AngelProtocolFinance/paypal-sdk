@@ -1,0 +1,104 @@
+{
+  "name": "@better-giving/paypal-sdk",
+  "version": "1.0.0",
+  "description": "TypeScript SDK for PayPal REST APIs generated from official OpenAPI specifications",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./orders": {
+      "types": "./dist/orders/index.d.ts",
+      "import": "./dist/orders/index.js"
+    },
+    "./payments": {
+      "types": "./dist/payments/index.d.ts",
+      "import": "./dist/payments/index.js"
+    },
+    "./invoicing": {
+      "types": "./dist/invoicing/index.d.ts",
+      "import": "./dist/invoicing/index.js"
+    },
+    "./subscriptions": {
+      "types": "./dist/subscriptions/index.d.ts",
+      "import": "./dist/subscriptions/index.js"
+    },
+    "./vault": {
+      "types": "./dist/vault/index.d.ts",
+      "import": "./dist/vault/index.js"
+    },
+    "./payouts": {
+      "types": "./dist/payouts/index.d.ts",
+      "import": "./dist/payouts/index.js"
+    },
+    "./partner-referrals": {
+      "types": "./dist/partner-referrals/index.d.ts",
+      "import": "./dist/partner-referrals/index.js"
+    },
+    "./disputes": {
+      "types": "./dist/disputes/index.d.ts",
+      "import": "./dist/disputes/index.js"
+    },
+    "./catalog": {
+      "types": "./dist/catalog/index.d.ts",
+      "import": "./dist/catalog/index.js"
+    },
+    "./tracking": {
+      "types": "./dist/tracking/index.d.ts",
+      "import": "./dist/tracking/index.js"
+    },
+    "./web-profiles": {
+      "types": "./dist/web-profiles/index.d.ts",
+      "import": "./dist/web-profiles/index.js"
+    },
+    "./webhooks": {
+      "types": "./dist/webhooks/index.d.ts",
+      "import": "./dist/webhooks/index.js"
+    },
+    "./transactions": {
+      "types": "./dist/transactions/index.d.ts",
+      "import": "./dist/transactions/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "generate": "node scripts/generate-sdk.js && node scripts/fix-generated.js",
+    "build": "pnpm run clean && pnpm run generate && tsc",
+    "clean": "rm -rf generated dist",
+    "prepublishOnly": "pnpm run build"
+  },
+  "keywords": [
+    "paypal",
+    "sdk",
+    "typescript",
+    "rest-api",
+    "openapi",
+    "esm",
+    "tree-shakeable"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AngelProtocolFinance/paypal-sdk.git"
+  },
+  "sideEffects": false,
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.14.0",
+    "@types/node": "^24.10.1",
+    "form-data": "^4.0.5",
+    "openapi-typescript-codegen": "^0.29.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "axios": "^1.6.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
