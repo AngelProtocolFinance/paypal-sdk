@@ -37,9 +37,52 @@ yarn add @better-giving/paypal-sdk
 
 ## Usage
 
-### Tree-shakeable Imports
+### Using PayPalClient (Recommended)
 
-Import only the APIs you need for optimal bundle size:
+The easiest way to use the SDK is with the `PayPalClient` class and factory functions for a functional, modular API:
+
+```typescript
+import { PayPalClient, createOrdersService } from '@better-giving/paypal-sdk';
+
+// Create a client with your credentials
+const client = new PayPalClient({
+  clientId: process.env.PAYPAL_CLIENT_ID!,
+  clientSecret: process.env.PAYPAL_CLIENT_SECRET!,
+  environment: 'sandbox', // or 'production'
+});
+
+// Create service instance using factory function (tree-shakeable!)
+const orders = createOrdersService(client);
+
+// Use the service - authentication is handled automatically!
+const order = await orders.OrdersService.ordersCreate({
+  requestBody: {
+    intent: 'CAPTURE',
+    purchase_units: [{
+      amount: {
+        currency_code: 'USD',
+        value: '100.00'
+      }
+    }]
+  }
+});
+
+console.log('Order ID:', order.id);
+```
+
+The `PayPalClient`:
+- Provides a functional, modular API design with factory functions
+- **Fully tree-shakeable** - only import the services you need (see [TREE_SHAKING.md](./TREE_SHAKING.md))
+- Automatically fetches and refreshes access tokens
+- Configures service instances with authentication
+- Supports both sandbox and production environments
+- Caches tokens until they expire
+
+Each factory function is in its own file, ensuring that unused services are completely excluded from your bundle.
+
+### Tree-shakeable Imports (Manual Auth)
+
+You can also import APIs individually and configure authentication manually:
 
 ```typescript
 // Import only the orders API (tree-shakeable)
@@ -110,16 +153,25 @@ import * as transactions from '@better-giving/paypal-sdk/transactions';
 
 ## Examples
 
+For more detailed examples, see [EXAMPLES.md](./EXAMPLES.md).
+
 ### Create and Capture an Order
 
 ```typescript
-import { OrdersService, OpenAPI } from '@better-giving/paypal-sdk/orders';
+import { PayPalClient, createOrdersService } from '@better-giving/paypal-sdk';
 
-OpenAPI.BASE = 'https://api-m.sandbox.paypal.com';
-OpenAPI.TOKEN = await getAccessToken(); // Your auth logic
+// Initialize client (do this once)
+const client = new PayPalClient({
+  clientId: process.env.PAYPAL_CLIENT_ID!,
+  clientSecret: process.env.PAYPAL_CLIENT_SECRET!,
+  environment: 'sandbox',
+});
+
+// Create the orders service
+const orders = createOrdersService(client);
 
 // Create order
-const order = await OrdersService.ordersCreate({
+const order = await orders.OrdersService.ordersCreate({
   requestBody: {
     intent: 'CAPTURE',
     purchase_units: [{
@@ -130,13 +182,13 @@ const order = await OrdersService.ordersCreate({
       description: 'Product purchase'
     }]
   },
-  paypalRequestId: `order-${Date.now()}`
+  payPalRequestId: `order-${Date.now()}`
 });
 
 // Capture payment
-const captured = await OrdersService.ordersCapture({
+const captured = await orders.OrdersService.ordersCapture({
   id: order.id,
-  paypalRequestId: `capture-${Date.now()}`
+  payPalRequestId: `capture-${Date.now()}`
 });
 
 console.log('Payment captured:', captured.status);
@@ -145,12 +197,18 @@ console.log('Payment captured:', captured.status);
 ### Create a Subscription
 
 ```typescript
-import { SubscriptionsService, OpenAPI } from '@better-giving/paypal-sdk/subscriptions';
+import { PayPalClient, createSubscriptionsService } from '@better-giving/paypal-sdk';
 
-OpenAPI.BASE = 'https://api-m.sandbox.paypal.com';
-OpenAPI.TOKEN = await getAccessToken();
+const client = new PayPalClient({
+  clientId: process.env.PAYPAL_CLIENT_ID!,
+  clientSecret: process.env.PAYPAL_CLIENT_SECRET!,
+  environment: 'sandbox',
+});
 
-const subscription = await SubscriptionsService.subscriptionsCreate({
+// Create the subscriptions service
+const subscriptions = createSubscriptionsService(client);
+
+const subscription = await subscriptions.SubscriptionsService.subscriptionsCreate({
   requestBody: {
     plan_id: 'PLAN_ID',
     subscriber: {
@@ -169,12 +227,18 @@ console.log('Subscription ID:', subscription.id);
 ### Send a Payout
 
 ```typescript
-import { PayoutsService, OpenAPI } from '@better-giving/paypal-sdk/payouts';
+import { PayPalClient, createPayoutsService } from '@better-giving/paypal-sdk';
 
-OpenAPI.BASE = 'https://api-m.paypal.com'; // Production
-OpenAPI.TOKEN = await getAccessToken();
+const client = new PayPalClient({
+  clientId: process.env.PAYPAL_CLIENT_ID!,
+  clientSecret: process.env.PAYPAL_CLIENT_SECRET!,
+  environment: 'production', // Use production for real payouts
+});
 
-const payout = await PayoutsService.payoutsPost({
+// Create the payouts service
+const payouts = createPayoutsService(client);
+
+const payout = await payouts.PayoutsService.payoutsPost({
   requestBody: {
     sender_batch_header: {
       sender_batch_id: `batch-${Date.now()}`,
@@ -196,27 +260,28 @@ const payout = await PayoutsService.payoutsPost({
 
 ## Authentication
 
-Get an access token from PayPal:
+The `PayPalClient` handles authentication automatically. You just need to provide your client ID and secret:
 
 ```typescript
-import axios from 'axios';
+import { PayPalClient } from '@better-giving/paypal-sdk';
 
-async function getAccessToken() {
-  const response = await axios.post(
-    'https://api-m.sandbox.paypal.com/v1/oauth2/token',
-    'grant_type=client_credentials',
-    {
-      auth: {
-        username: process.env.PAYPAL_CLIENT_ID!,
-        password: process.env.PAYPAL_CLIENT_SECRET!
-      },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    }
-  );
-  return response.data.access_token;
-}
+const client = new PayPalClient({
+  clientId: process.env.PAYPAL_CLIENT_ID!,
+  clientSecret: process.env.PAYPAL_CLIENT_SECRET!,
+  environment: 'sandbox', // or 'production'
+});
+
+// The client automatically:
+// - Fetches access tokens when needed
+// - Caches tokens until they expire
+// - Refreshes tokens automatically
+// - Configures all API modules
+
+// You can also manually refresh the token if needed
+await client.refreshToken();
+
+// Or get the current access token
+const token = await client.getAccessToken();
 ```
 
 ## Development
@@ -239,12 +304,13 @@ pnpm run clean
 
 ```
 paypal-sdk/
+├── src/                    # PayPalClient source code
 ├── generated/              # TypeScript SDK source (generated)
 ├── dist/                   # Compiled ESM output
 ├── specs/                  # PayPal OpenAPI specifications
 ├── scripts/                # SDK generation script
 │   └── generate-sdk.js
-├── examples/               # Usage examples
+├── EXAMPLES.md             # Usage examples
 ├── package.json
 ├── tsconfig.json
 └── README.md

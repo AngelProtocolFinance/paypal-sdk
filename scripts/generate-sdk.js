@@ -51,7 +51,7 @@ async function generateAll() {
       await generate({
         input: specPath,
         output: apiOutputDir,
-        httpClient: 'axios',
+        httpClient: 'fetch',
         useOptions: true,
         useUnionTypes: true,
         exportCore: true,
@@ -66,15 +66,27 @@ async function generateAll() {
   }
 
   // Create main index file that exports all APIs
-  console.log('📝 Creating main index file...');
+  console.log('📝 Creating main index files...');
 
-  const indexContent = `// PayPal SDK - Generated TypeScript Client
+  const generatedIndexContent = `// PayPal SDK - Generated TypeScript Client
 // Generated from PayPal REST API OpenAPI Specifications
 
 ${apiSpecs.map(api => `export * as ${api.name.replace(/-/g, '')} from './${api.name}/index.js';`).join('\n')}
+
+export { PayPalClient, type PayPalClientConfig, type PayPalEnvironment } from '../src/index.js';
 `;
 
-  fs.writeFileSync(path.join(outputDir, 'index.ts'), indexContent);
+  fs.writeFileSync(path.join(outputDir, 'index.ts'), generatedIndexContent);
+
+  // Update root index file
+  const rootIndexContent = `// Re-export all APIs from generated directory
+${apiSpecs.map(api => `export * as ${api.name.replace(/-/g, '')} from './generated/${api.name}/index.js';`).join('\n')}
+
+// Export PayPalClient from src
+export { PayPalClient, type PayPalClientConfig, type PayPalEnvironment } from './src/client.js';
+`;
+
+  fs.writeFileSync(path.join(__dirname, '../index.ts'), rootIndexContent);
 
   console.log('✅ SDK generation complete!');
   console.log('\nGenerated API clients:');

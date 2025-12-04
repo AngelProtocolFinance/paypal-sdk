@@ -3,8 +3,12 @@
   "version": "1.1.1",
   "description": "TypeScript SDK for PayPal REST APIs generated from official OpenAPI specifications",
   "type": "module",
+  "packageManager": "pnpm@10.24.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -92,15 +96,12 @@
   },
   "sideEffects": false,
   "devDependencies": {
-    "@changesets/cli": "^2.29.8",
-    "@openapitools/openapi-generator-cli": "^2.14.0",
-    "@types/node": "^24.10.1",
-    "form-data": "^4.0.5",
-    "openapi-typescript-codegen": "^0.29.0",
-    "typescript": "^5.3.3"
-  },
-  "dependencies": {
-    "axios": "^1.6.2"
+    "@changesets/cli": "2.29.8",
+    "@openapitools/openapi-generator-cli": "2.14.0",
+    "@types/node": "24.10.1",
+    "form-data": "4.0.5",
+    "openapi-typescript-codegen": "0.29.0",
+    "typescript": "5.7.2"
   },
   "publishConfig": {
     "access": "public",

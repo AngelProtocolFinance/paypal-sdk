@@ -2,7 +2,9 @@
 generated/
 specs/
 scripts/
-examples/
+src/
+index.ts
+EXAMPLES.md
 
 # Config files
 tsconfig.json
