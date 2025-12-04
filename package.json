@@ -1,6 +1,6 @@
 {
   "name": "@better-giving/paypal-sdk",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "TypeScript SDK for PayPal REST APIs generated from official OpenAPI specifications",
   "type": "module",
   "packageManager": "pnpm@10.24.0",
