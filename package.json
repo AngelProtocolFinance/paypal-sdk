@@ -1,6 +1,6 @@
 {
   "name": "@better-giving/paypal-sdk",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "TypeScript SDK for PayPal REST APIs generated from official OpenAPI specifications",
   "type": "module",
   "packageManager": "pnpm@10.24.0",
@@ -15,56 +15,56 @@
       "import": "./dist/index.js"
     },
     "./orders": {
-      "types": "./dist/orders/index.d.ts",
-      "import": "./dist/orders/index.js"
+      "types": "./dist/generated/orders/index.d.ts",
+      "import": "./dist/generated/orders/index.js"
     },
     "./payments": {
-      "types": "./dist/payments/index.d.ts",
-      "import": "./dist/payments/index.js"
+      "types": "./dist/generated/payments/index.d.ts",
+      "import": "./dist/generated/payments/index.js"
     },
     "./invoicing": {
-      "types": "./dist/invoicing/index.d.ts",
-      "import": "./dist/invoicing/index.js"
+      "types": "./dist/generated/invoicing/index.d.ts",
+      "import": "./dist/generated/invoicing/index.js"
     },
     "./subscriptions": {
-      "types": "./dist/subscriptions/index.d.ts",
-      "import": "./dist/subscriptions/index.js"
+      "types": "./dist/generated/subscriptions/index.d.ts",
+      "import": "./dist/generated/subscriptions/index.js"
     },
     "./vault": {
-      "types": "./dist/vault/index.d.ts",
-      "import": "./dist/vault/index.js"
+      "types": "./dist/generated/vault/index.d.ts",
+      "import": "./dist/generated/vault/index.js"
     },
     "./payouts": {
-      "types": "./dist/payouts/index.d.ts",
-      "import": "./dist/payouts/index.js"
+      "types": "./dist/generated/payouts/index.d.ts",
+      "import": "./dist/generated/payouts/index.js"
     },
     "./partner-referrals": {
-      "types": "./dist/partner-referrals/index.d.ts",
-      "import": "./dist/partner-referrals/index.js"
+      "types": "./dist/generated/partner-referrals/index.d.ts",
+      "import": "./dist/generated/partner-referrals/index.js"
     },
     "./disputes": {
-      "types": "./dist/disputes/index.d.ts",
-      "import": "./dist/disputes/index.js"
+      "types": "./dist/generated/disputes/index.d.ts",
+      "import": "./dist/generated/disputes/index.js"
     },
     "./catalog": {
-      "types": "./dist/catalog/index.d.ts",
-      "import": "./dist/catalog/index.js"
+      "types": "./dist/generated/catalog/index.d.ts",
+      "import": "./dist/generated/catalog/index.js"
     },
     "./tracking": {
-      "types": "./dist/tracking/index.d.ts",
-      "import": "./dist/tracking/index.js"
+      "types": "./dist/generated/tracking/index.d.ts",
+      "import": "./dist/generated/tracking/index.js"
     },
     "./web-profiles": {
-      "types": "./dist/web-profiles/index.d.ts",
-      "import": "./dist/web-profiles/index.js"
+      "types": "./dist/generated/web-profiles/index.d.ts",
+      "import": "./dist/generated/web-profiles/index.js"
     },
     "./webhooks": {
-      "types": "./dist/webhooks/index.d.ts",
-      "import": "./dist/webhooks/index.js"
+      "types": "./dist/generated/webhooks/index.d.ts",
+      "import": "./dist/generated/webhooks/index.js"
     },
     "./transactions": {
-      "types": "./dist/transactions/index.d.ts",
-      "import": "./dist/transactions/index.js"
+      "types": "./dist/generated/transactions/index.d.ts",
+      "import": "./dist/generated/transactions/index.js"
     }
   },
   "files": [

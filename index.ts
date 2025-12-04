@@ -1,17 +1,17 @@
-// Re-export all APIs from generated directory
-export * as orders from './generated/orders/index.js';
-export * as payments from './generated/payments/index.js';
-export * as invoicing from './generated/invoicing/index.js';
-export * as subscriptions from './generated/subscriptions/index.js';
-export * as vault from './generated/vault/index.js';
-export * as payouts from './generated/payouts/index.js';
-export * as partnerreferrals from './generated/partner-referrals/index.js';
-export * as disputes from './generated/disputes/index.js';
-export * as catalog from './generated/catalog/index.js';
-export * as tracking from './generated/tracking/index.js';
-export * as webprofiles from './generated/web-profiles/index.js';
-export * as webhooks from './generated/webhooks/index.js';
-export * as transactions from './generated/transactions/index.js';
-
-// Export PayPalClient from src
+// Export PayPalClient
 export { PayPalClient, type PayPalClientConfig, type PayPalEnvironment } from './src/client.js';
+
+// Export tree-shakeable factory functions
+export { create_orders_service, type OrdersService } from './src/factories/orders.js';
+export { create_payments_service, type PaymentsService } from './src/factories/payments.js';
+export { create_invoicing_service, type InvoicingService } from './src/factories/invoicing.js';
+export { create_subscriptions_service, type SubscriptionsService } from './src/factories/subscriptions.js';
+export { create_vault_service, type VaultService } from './src/factories/vault.js';
+export { create_payouts_service, type PayoutsService } from './src/factories/payouts.js';
+export { create_partner_referrals_service, type PartnerReferralsService } from './src/factories/partner-referrals.js';
+export { create_disputes_service, type DisputesService } from './src/factories/disputes.js';
+export { create_catalog_service, type CatalogService } from './src/factories/catalog.js';
+export { create_tracking_service, type TrackingService } from './src/factories/tracking.js';
+export { create_web_profiles_service, type WebProfilesService } from './src/factories/web-profiles.js';
+export { create_webhooks_service, type WebhooksService } from './src/factories/webhooks.js';
+export { create_transactions_service, type TransactionsService } from './src/factories/transactions.js';

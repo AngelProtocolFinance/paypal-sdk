@@ -79,11 +79,15 @@ export { PayPalClient, type PayPalClientConfig, type PayPalEnvironment } from '.
   fs.writeFileSync(path.join(outputDir, 'index.ts'), generatedIndexContent);
 
   // Update root index file
-  const rootIndexContent = `// Re-export all APIs from generated directory
-${apiSpecs.map(api => `export * as ${api.name.replace(/-/g, '')} from './generated/${api.name}/index.js';`).join('\n')}
-
-// Export PayPalClient from src
+  const rootIndexContent = `// Export PayPalClient
 export { PayPalClient, type PayPalClientConfig, type PayPalEnvironment } from './src/client.js';
+
+// Export tree-shakeable factory functions
+${apiSpecs.map(api => {
+    const serviceName = api.name.replace(/-/g, '_');
+    const typeName = api.name.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('') + 'Service';
+    return `export { create_${serviceName}_service, type ${typeName} } from './src/factories/${api.name}.js';`;
+  }).join('\n')}
 `;
 
   fs.writeFileSync(path.join(__dirname, '../index.ts'), rootIndexContent);
