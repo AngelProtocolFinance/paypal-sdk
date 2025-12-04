@@ -19,24 +19,24 @@ Each factory function is in its own file and only imports what it needs:
 ```typescript
 // src/factories/orders.ts
 import type { PayPalClient } from '../client.js';
-import * as ordersModule from '../../generated/orders/index.js';
+import * as orders_module from '../../generated/orders/index.js';
 
-export const createOrdersService = (client: PayPalClient) => {
-  ordersModule.OpenAPI.BASE = client.getBaseUrl();
-  ordersModule.OpenAPI.TOKEN = async () => await client.getAccessToken();
-  return ordersModule;
+export const create_orders_service = (client: PayPalClient) => {
+  orders_module.OpenAPI.BASE = client.get_base_url();
+  orders_module.OpenAPI.TOKEN = async () => await client.get_access_token();
+  return orders_module;
 };
 ```
 
 ```typescript
 // src/factories/payments.ts
 import type { PayPalClient } from '../client.js';
-import * as paymentsModule from '../../generated/payments/index.js';
+import * as payments_module from '../../generated/payments/index.js';
 
-export const createPaymentsService = (client: PayPalClient) => {
-  paymentsModule.OpenAPI.BASE = client.getBaseUrl();
-  paymentsModule.OpenAPI.TOKEN = async () => await client.getAccessToken();
-  return paymentsModule;
+export const create_payments_service = (client: PayPalClient) => {
+  payments_module.OpenAPI.BASE = client.get_base_url();
+  payments_module.OpenAPI.TOKEN = async () => await client.get_access_token();
+  return payments_module;
 };
 ```
 
@@ -47,20 +47,20 @@ Each factory is isolated in its own module, ensuring perfect tree-shaking.
 When you import only what you need:
 
 ```typescript
-import { PayPalClient, createOrdersService } from '@better-giving/paypal-sdk';
+import { PayPalClient, create_orders_service } from '@better-giving/paypal-sdk';
 ```
 
 **Bundled:**
 - `PayPalClient` class
-- `createOrdersService` function
-- `ordersModule` (orders API only)
-- Dependencies: `axios`
+- `create_orders_service` function
+- `orders_module` (orders API only)
+- No external HTTP dependencies (uses native fetch)
 
 **NOT Bundled:**
-- `createPaymentsService` ❌
-- `createSubscriptionsService` ❌
-- `paymentsModule` ❌
-- `subscriptionsModule` ❌
+- `create_payments_service` ❌
+- `create_subscriptions_service` ❌
+- `payments_module` ❌
+- `subscriptions_module` ❌
 - All other unused services ❌
 
 ## Testing Tree-Shaking
@@ -74,22 +74,21 @@ export default {
   output: {
     file: 'bundle.js',
     format: 'esm'
-  },
-  external: ['axios'], // Don't bundle axios
+  }
 };
 ```
 
 ```javascript
 // src/index.js
-import { PayPalClient, createOrdersService } from '@better-giving/paypal-sdk';
+import { PayPalClient, create_orders_service } from '@better-giving/paypal-sdk';
 
 const client = new PayPalClient({
-  clientId: 'test',
-  clientSecret: 'test',
+  client_id: 'test',
+  client_secret: 'test',
   environment: 'sandbox',
 });
 
-const orders = createOrdersService(client);
+const orders = create_orders_service(client);
 // Only orders module is in the bundle!
 ```
 
@@ -150,7 +149,7 @@ To verify tree-shaking in your project:
 
 ```typescript
 // You import:
-import { PayPalClient, createOrdersService } from '@better-giving/paypal-sdk';
+import { PayPalClient, create_orders_service } from '@better-giving/paypal-sdk';
 
 // Bundler includes:
 // ✓ src/client.ts (PayPalClient)
@@ -164,8 +163,8 @@ import { PayPalClient, createOrdersService } from '@better-giving/paypal-sdk';
 // Bundler EXCLUDES (completely removed from bundle):
 // ✗ src/factories/payments.ts (entire file not included)
 // ✗ src/factories/subscriptions.ts (entire file not included)
-// ✗ createPaymentsService
-// ✗ createSubscriptionsService
+// ✗ create_payments_service
+// ✗ create_subscriptions_service
 // ✗ generated/payments/* (entire directory not included)
 // ✗ generated/subscriptions/* (entire directory not included)
 // ✗ All other 11 services you don't import
@@ -174,7 +173,7 @@ import { PayPalClient, createOrdersService } from '@better-giving/paypal-sdk';
 ### File-Level Tree-Shaking
 
 Because each factory is in its own file:
-- Importing `createOrdersService` only includes `src/factories/orders.ts`
+- Importing `create_orders_service` only includes `src/factories/orders.ts`
 - The other 12 factory files are never even evaluated
 - Their dependencies are never loaded
 - This is the most efficient form of tree-shaking possible

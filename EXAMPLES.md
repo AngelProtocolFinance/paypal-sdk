@@ -4,35 +4,34 @@ This file contains code examples for using the PayPal SDK.
 
 ## Table of Contents
 
-- [Using PayPalClient (Recommended)](#using-paypalclient-recommended)
+- [Using PayPalClient](#using-paypalclient)
 - [Orders API](#orders-api)
 - [Subscriptions API](#subscriptions-api)
-- [Manual Authentication (Legacy)](#manual-authentication-legacy)
 
-## Using PayPalClient (Recommended)
+## Using PayPalClient
 
 The `PayPalClient` class provides a functional, modular API where you create service instances from the client using factory functions.
 
 ```typescript
-import { PayPalClient, createOrdersService } from '@better-giving/paypal-sdk';
+import { PayPalClient, create_orders_service } from '@better-giving/paypal-sdk';
 
 // Initialize client with your credentials
 const client = new PayPalClient({
-  clientId: process.env.PAYPAL_CLIENT_ID!,
-  clientSecret: process.env.PAYPAL_CLIENT_SECRET!,
+  client_id: process.env.PAYPAL_CLIENT_ID!,
+  client_secret: process.env.PAYPAL_CLIENT_SECRET!,
   environment: 'sandbox', // or 'production'
 });
 
 // Create service instance using factory function
-const orders = createOrdersService(client);
+const orders = create_orders_service(client);
 
 // The service is now configured with the client's authentication
 // Check configuration
-console.log('Base URL:', client.getBaseUrl());
-console.log('Is Production:', client.isProduction());
+console.log('Base URL:', client.get_base_url());
+console.log('Is Production:', client.is_production());
 
 // Manually refresh token if needed
-await client.refreshToken();
+await client.refresh_token();
 ```
 
 ## Orders API
@@ -40,20 +39,20 @@ await client.refreshToken();
 ### Create an Order
 
 ```typescript
-import { PayPalClient, createOrdersService } from '@better-giving/paypal-sdk';
+import { PayPalClient, create_orders_service } from '@better-giving/paypal-sdk';
 
 const client = new PayPalClient({
-  clientId: process.env.PAYPAL_CLIENT_ID!,
-  clientSecret: process.env.PAYPAL_CLIENT_SECRET!,
+  client_id: process.env.PAYPAL_CLIENT_ID!,
+  client_secret: process.env.PAYPAL_CLIENT_SECRET!,
   environment: 'sandbox',
 });
 
 // Create the orders service
-const orders = createOrdersService(client);
+const orders = create_orders_service(client);
 
-async function createOrder() {
+async function create_order() {
   try {
-    const orderRequest = {
+    const order_request = {
       intent: 'CAPTURE' as const,
       purchase_units: [{
         amount: {
@@ -65,7 +64,7 @@ async function createOrder() {
     };
 
     const response = await orders.OrdersService.ordersCreate({
-      requestBody: orderRequest,
+      requestBody: order_request,
       payPalRequestId: `order-${Date.now()}` // Optional idempotency key
     });
 
@@ -85,10 +84,10 @@ async function createOrder() {
 ### Get Order Details
 
 ```typescript
-async function getOrder(orderId: string) {
+async function get_order(order_id: string) {
   try {
     const response = await orders.OrdersService.ordersGet({
-      id: orderId
+      id: order_id
     });
 
     console.log('Order details:');
@@ -107,10 +106,10 @@ async function getOrder(orderId: string) {
 ### Capture Payment for an Order
 
 ```typescript
-async function captureOrder(orderId: string) {
+async function capture_order(order_id: string) {
   try {
     const response = await orders.OrdersService.ordersCapture({
-      id: orderId,
+      id: order_id,
       payPalRequestId: `capture-${Date.now()}`
     });
 
@@ -131,20 +130,20 @@ async function captureOrder(orderId: string) {
 ### Create a Subscription Plan
 
 ```typescript
-import { PayPalClient, createSubscriptionsService } from '@better-giving/paypal-sdk';
+import { PayPalClient, create_subscriptions_service } from '@better-giving/paypal-sdk';
 
 const client = new PayPalClient({
-  clientId: process.env.PAYPAL_CLIENT_ID!,
-  clientSecret: process.env.PAYPAL_CLIENT_SECRET!,
+  client_id: process.env.PAYPAL_CLIENT_ID!,
+  client_secret: process.env.PAYPAL_CLIENT_SECRET!,
   environment: 'sandbox',
 });
 
 // Create the subscriptions service
-const subscriptions = createSubscriptionsService(client);
+const subscriptions = create_subscriptions_service(client);
 
-async function createPlan() {
+async function create_plan() {
   try {
-    const planRequest = {
+    const plan_request = {
       product_id: 'PRODUCT_ID_HERE', // Create a product first
       name: 'Basic Subscription Plan',
       description: 'Basic subscription with monthly billing',
@@ -170,7 +169,7 @@ async function createPlan() {
     };
 
     const response = await subscriptions.PlansService.plansCreate({
-      requestBody: planRequest,
+      requestBody: plan_request,
       payPalRequestId: `plan-${Date.now()}`
     });
 
@@ -189,10 +188,10 @@ async function createPlan() {
 ### Create a Subscription
 
 ```typescript
-async function createSubscription(planId: string) {
+async function create_subscription(plan_id: string) {
   try {
-    const subscriptionRequest = {
-      plan_id: planId,
+    const subscription_request = {
+      plan_id: plan_id,
       start_time: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Start tomorrow
       subscriber: {
         email_address: 'customer@example.com',
@@ -209,7 +208,7 @@ async function createSubscription(planId: string) {
     };
 
     const response = await subscriptions.SubscriptionsService.subscriptionsCreate({
-      requestBody: subscriptionRequest,
+      requestBody: subscription_request,
       payPalRequestId: `subscription-${Date.now()}`
     });
 
@@ -229,10 +228,10 @@ async function createSubscription(planId: string) {
 ### Get Subscription Details
 
 ```typescript
-async function getSubscription(subscriptionId: string) {
+async function get_subscription(subscription_id: string) {
   try {
     const response = await subscriptions.SubscriptionsService.subscriptionsGet({
-      subscriptionId
+      subscriptionId: subscription_id
     });
 
     console.log('Subscription details:');
@@ -249,53 +248,3 @@ async function getSubscription(subscriptionId: string) {
 }
 ```
 
-## Manual Authentication (Legacy)
-
-If you prefer to handle authentication manually without using `PayPalClient`:
-
-```typescript
-import { orders } from '@better-giving/paypal-sdk';
-
-// Configure the API client manually
-orders.OpenAPI.BASE = 'https://api-m.sandbox.paypal.com';
-orders.OpenAPI.TOKEN = 'YOUR_ACCESS_TOKEN'; // You need to fetch this yourself
-
-// Then use the services
-const order = await orders.OrdersService.ordersCreate({
-  requestBody: {
-    intent: 'CAPTURE',
-    purchase_units: [{
-      amount: {
-        currency_code: 'USD',
-        value: '100.00'
-      }
-    }]
-  }
-});
-```
-
-### Getting Access Token Manually
-
-```typescript
-import axios from 'axios';
-
-async function getAccessToken() {
-  const response = await axios.post(
-    'https://api-m.sandbox.paypal.com/v1/oauth2/token',
-    'grant_type=client_credentials',
-    {
-      auth: {
-        username: process.env.PAYPAL_CLIENT_ID!,
-        password: process.env.PAYPAL_CLIENT_SECRET!
-      },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    }
-  );
-  return response.data.access_token;
-}
-
-// Use it
-orders.OpenAPI.TOKEN = await getAccessToken();
-```
