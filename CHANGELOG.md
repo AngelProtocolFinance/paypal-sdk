@@ -1,5 +1,11 @@
 # @better-giving/paypal-sdk
 
+## 1.1.1
+
+### Patch Changes
+
+- 9eb1990: test
+
 ## 1.1.0
 
 ### Minor Changes
